@@ -1,0 +1,62 @@
+# Arquivos temporários
+bin/
+obj/
+
+# Arquivos compilados
+*.exe
+*.pdb
+*.dll
+
+# Arquivos de usuário
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Pacotes NuGet
+*.nuget/
+*.nupkg
+*.paket/paket.exe
+
+# Logs e caches
+*.log
+*.vscode/
+.vs2019/
+.vs/
+_resharper/
+*.suo
+*.user
+*.sln.docstates
+
+# Dependências
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Configurações do Rider
+.idea/
+
+# Configurações do Visual Studio
+.vscode/
+.vs2019/
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Configurações do Rider
+.idea/
+
+# Arquivos de compilação
+_ReSharper*/
+[Tt]est[Rr]esult*/
+[Bb]in
+[Dd]ebug*/
+[Ii]pch*/
+[Aa][Rr][Mm]/
+[x64]/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio Code
+.vscode/
