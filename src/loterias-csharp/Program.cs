@@ -43,7 +43,10 @@ class Program
                         var _count = 0;
                         Console.WriteLine("Loterias");
                         Console.WriteLine("------------------------");
-                        foreach (var item in await Lotteries.DoListLottery(Lotteries.TLotteries.MegaSena, 10000000))
+                        foreach (var item in await Lotteries
+                                                    .DoListLottery(Lotteries
+                                                                        .TLotteries
+                                                                            .MegaSena, 53000000))
                         {
                             _count++;
                             if (_count == 1)

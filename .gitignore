@@ -7,6 +7,9 @@ obj/
 *.pdb
 *.dll
 
+#abjects
+*.obj
+
 # Arquivos de usuário
 *.user
 *.userosscache
