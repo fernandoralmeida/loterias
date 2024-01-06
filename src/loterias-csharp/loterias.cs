@@ -1,4 +1,6 @@
 
+using System.Text;
+
 namespace LoteriasCS;
 public static class Lotteries
 {
@@ -38,10 +40,11 @@ public static class Lotteries
                 _selected.Sort();
 
                 //Convertendo os números para string
-                string _number_to_string = string.Join(" ", _selected);
+                StringBuilder _number_to_string = new();
+                _number_to_string.AppendJoin(" ", _selected);
 
                 //Adicionando o número à lista
-                _numbers.Add(_number_to_string);
+                _numbers.Add(_number_to_string.ToString());
             }
 
             //agrupa as series sorteadas repetidas e retorna as 10 series mais sorteadas

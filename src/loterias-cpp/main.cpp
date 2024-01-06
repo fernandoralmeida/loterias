@@ -1,5 +1,5 @@
 #include <thread>
-#include <istream>
+#include <ostream>
 #include <string>
 
 // includes struct & class & custon head
@@ -9,13 +9,10 @@ using namespace std;
 
 int main()
 {
-    lottery _lottery;
     try
     {
-        /* code */
         while (true)
         {
-            /* code */
             std::this_thread::sleep_for(std::chrono::seconds(1));
             std::cout << "\nLeterias V1.0\n";
             std::cout << "Escolha o Jogo!\n";
@@ -31,17 +28,28 @@ int main()
 
             std::chrono::steady_clock::time_point timerStart;
             std::chrono::steady_clock::time_point timerEnd;
-            
+
             switch (choice)
             {
             case 1:
+            {
                 timerStart = std::chrono::steady_clock::now();
-
+                int count = 0;
                 std::cout << "Loterias\n";
                 std::cout << "------------------------\n";
-                
-                _lottery.dolistLottery();
-                
+
+                auto result = Lotteries::DoListLottery(Lotteries::TLotteries::MegaSena, 53000000);
+                for (const auto &item : result)
+                {
+                    ++count;
+                    if (count == 1)
+                    {
+                        std::cout << "10 maiores combinações!\n";
+                        std::cout << "------------------------\n";
+                    }
+                    std::cout << count << "º\t" << item.first << "\t" << item.second << " ocorrências\n";
+                }
+
                 timerEnd = std::chrono::steady_clock::now();
                 std::chrono::duration<double> elapsedTime = timerEnd - timerStart;
 
@@ -49,6 +57,7 @@ int main()
                 std::cout << "Processado em " << elapsedTime.count() << " segundos\n";
                 std::cout << "------------------------\n";
                 break;
+            }
 
             case 0:
                 std::cout << "Closing App...\n";
@@ -62,8 +71,7 @@ int main()
     }
     catch (const std::exception &ex)
     {
-        std::cout << "Error: " << ex.what() << "\n";
+        std::cerr << "Error: " << ex.what() << "\n";
     }
-
     return 0;
 }

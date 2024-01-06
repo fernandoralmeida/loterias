@@ -2,73 +2,101 @@
 #include <vector>
 #include <random>
 #include <map>
+#include <future>
+#include <string>
+#include <numeric>
 
 using namespace std;
 
-struct lottery
+// Classe Lotteries
+class Lotteries
 {
-    void mostrarProgresso(int combinacoesGeradas)
+public:
+    // Enumeração TLotteries
+    enum TLotteries
     {
-        if (combinacoesGeradas % 1000000 == 0)
-        {
-            std::cout << "\rCombinacoes geradas: " << combinacoesGeradas << std::flush;
-        }
-    }
+        Quina = 5,
+        MegaSena = 6
+    };
 
-    vector<int> gerarSorteio()
+    // Método estático DoListLottery
+    static std::vector<std::pair<std::string, int>> DoListLottery(TLotteries types, int combinations)
     {
-        std::vector<int> numeros(6);
+        int count = 0;
+        int count_progress = 0;
+
+        // Inicializando o gerador de números aleatórios
         std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(1, 60);
+        std::mt19937 rng(rd());
 
-        for (int i = 0; i < 6; ++i)
+        // Lista para armazenar os números sorteados
+        std::vector<std::string> numbers;
+        numbers.reserve(combinations);
+
+        // Gerando x quantidade de combinações numéricas
+        for (int i = 0; i < combinations; ++i)
         {
-            int numero;
-            do
+            ++count;
+            ++count_progress;
+
+            // Sorteando x números aleatórios
+            auto selected = Lottery(LotteryDictionary[types], rng);
+
+            // Exibindo o progresso a cada x números de jogos processados
+            if (count_progress % 1000000 == 0)
             {
-                numero = dis(gen);
-            } while (std::find(numeros.begin(), numeros.end(), numero) != numeros.end());
-            numeros[i] = numero;
-        }
-
-        return numeros;
-    }
-
-    void dolistLottery(){
-        
-        std::map<std::vector<int>, int> contagemSorteios;
-
-        for (int i = 0; i < 53000000; ++i)
-        {
-            auto sorteio = gerarSorteio();
-            contagemSorteios[sorteio]++;
-            mostrarProgresso(i + 1);
-        }
-
-        std::vector<std::pair<std::vector<int>, int>> sorteiosOrdenados(
-            contagemSorteios.begin(), contagemSorteios.end());
-        std::sort(sorteiosOrdenados.begin(), sorteiosOrdenados.end(),
-                  [](const auto &a, const auto &b)
-                  {
-                      return a.second > b.second;
-                  });
-
-        int limite = std::min(10, static_cast<int>(sorteiosOrdenados.size()));
-        for (int i = 0; i < limite; ++i)
-        {
-            const auto &sorteio = sorteiosOrdenados[i].first;
-            const auto &frequencia = sorteiosOrdenados[i].second;
-
-            std::cout << "Sorteio: ";
-            for (int numero : sorteio)
-            {
-                std::cout << numero << " ";
+                count_progress = 0;
+                std::cout << "  -> " << count << " gerados!";
+                std::cout << "\r" << std::flush;
             }
-            std::cout << "| Frequência: " << frequencia << std::endl;
+
+            // Ordenando os números em ordem crescente
+            std::sort(selected.begin(), selected.end());
+
+            // Convertendo os números para string
+            std::string number_to_string;
+            for (int num : selected)
+            {
+                number_to_string += std::to_string(num) + " ";
+            }
+
+            // Adicionando o número à lista
+            numbers.emplace_back(std::move(number_to_string));
         }
+
+        // Ajustando o tipo do mapa para suportar a ordenação
+        using MapType = std::map<std::string, int, std::greater<>>;
+
+        // Agrupando as séries sorteadas repetidas e retornando as 10 séries mais sorteadas
+        MapType countedNumbers;
+        for (const auto &n : numbers)
+        {
+            ++countedNumbers[n];
+        }
+
+        std::vector<std::pair<std::string, int>> result(countedNumbers.begin(), countedNumbers.end());
+        result.resize(std::min<size_t>(10, result.size())); // Ajustando para no máximo 10 elementos
+
+        return result;
     }
+
+    // Método estático Lottery
+    static std::vector<int> Lottery(std::pair<int, int> lotterydictionary, std::mt19937 &random)
+    {
+        std::vector<int> result(lotterydictionary.first);
+        std::iota(result.begin(), result.end(), 1);
+
+        std::shuffle(result.begin(), result.end(), random);
+        result.resize(lotterydictionary.second);
+
+        return result;
+    }
+
+    // Dicionário de loterias
+    static const std::map<TLotteries, std::pair<int, int>> LotteryDictionary;
 };
 
-
-
+// Inicializando o dicionário de loterias
+const std::map<Lotteries::TLotteries, std::pair<int, int>> Lotteries::LotteryDictionary = {
+    {Lotteries::TLotteries::MegaSena, {6, 60}},
+    {Lotteries::TLotteries::Quina, {5, 80}}};
